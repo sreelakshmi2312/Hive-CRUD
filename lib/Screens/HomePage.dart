@@ -11,8 +11,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final _nameController = TextEditingController();
-  final _ageController = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _ageController = TextEditingController();
   Box<listItems>? studentBox;
 
   @override
@@ -42,9 +42,67 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {});
   }
 
+  void _editStudent(int index, String stname, String stage) {
+  _nameController.text = stname;
+  _ageController.text = stage;
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Edit Student'),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min, // Set the content to be of minimum height
+          children: [
+            TextField(
+              controller: _nameController,
+              decoration: InputDecoration(labelText: 'Name'),
+            ),
+            TextField(
+              controller: _ageController,
+              decoration: InputDecoration(labelText: 'Age'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _nameController.clear();
+              _ageController.clear();
+
+            },
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog and save changes
+              final String name = _nameController.text;
+              final String age = _ageController.text;
+
+              if (name.isNotEmpty && age.isNotEmpty) {
+                final student = listItems(name: name, age: age);
+                studentBox!.putAt(index, student); // Update the existing object
+                _nameController.clear();
+                _ageController.clear();
+                setState(() {});
+              }
+            },
+            child: Text('Save'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+      return Scaffold(
       appBar: AppBar(
         title: Text('Hive CRUD Demo'),
       ),
@@ -65,9 +123,12 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           ElevatedButton(
+
             onPressed: _addStudentDetails,
             child: Text('Add Student'),
-          ),
+                        
+                        ),
+              
           Expanded(
             child: ValueListenableBuilder(
               valueListenable: studentBox!.listenable(),
@@ -82,9 +143,22 @@ class _MyHomePageState extends State<MyHomePage> {
                     return ListTile(
                       title: Text(currentStudent!.name),
                       subtitle: Text('Age: ${currentStudent.age}'),
-                      trailing: IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () => _deleteStudent(index),
+                      trailing: Container(
+                        width:96,
+                        child: Row(
+                          children: [
+                            IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () => {
+                              _editStudent(index,currentStudent.name,currentStudent.age)
+                            }
+                          ),
+                            IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () => _deleteStudent(index),
+                          ),
+                          ],
+                        ),
                       ),
                     );
                   },
