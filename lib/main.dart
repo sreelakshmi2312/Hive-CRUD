@@ -4,10 +4,10 @@ import 'package:hivecrud/models/listModel.dart';
 import 'Screens/HomePage.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Hive.initFlutter();
-  Hive.registerAdapter(listItemsAdapter());
-  await Hive.openBox<listItems>('student_db');
+  WidgetsFlutterBinding.ensureInitialized(); //ensuring initialization 
+  await Hive.initFlutter();  //initializing hive at beginning
+  Hive.registerAdapter(listItemsAdapter());   // registering the adapter for listItems
+  await Hive.openBox<listItems>('student_db');   // creating a new table
   runApp(const MyApp());
 }
 
