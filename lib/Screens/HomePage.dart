@@ -52,10 +52,10 @@ class _MyHomePageState extends State<MyHomePage> {
       return AlertDialog(
         title: Text('Edit Student'),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+          borderRadius: BorderRadius.circular(10.0), 
         ),
         content: Column(
-          mainAxisSize: MainAxisSize.min, // Set the content to be of minimum height
+          mainAxisSize: MainAxisSize.min, 
           children: [
             TextField(
               controller: _nameController,
@@ -79,13 +79,13 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop(); // Close the dialog and save changes
+              Navigator.of(context).pop();
               final String name = _nameController.text;
               final String age = _ageController.text;
 
               if (name.isNotEmpty && age.isNotEmpty) {
                 final student = listItems(name: name, age: age);
-                studentBox!.putAt(index, student); // Update the existing object
+                studentBox!.putAt(index, student); 
                 _nameController.clear();
                 _ageController.clear();
                 setState(() {});
